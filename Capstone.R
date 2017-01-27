@@ -1,17 +1,27 @@
-dataFiles <- "~/Development/DataScienceCapstone/final/en_US/"
+dataFiles <- "~/DataScienceCapstone/final/en_US/"
 
 setwd(dataFiles)
 
 library(tm)
+library(SnowballC)
 
-# Start the clock!
-ptm <- proc.time()
+# Take some timing measurements and include in milestone report
+stopwatch <- proc.time()
 
 # Load the whole shebang!
 corpora <- Corpus(DirSource(dataFiles))
 
+# How long did the load take?
+proc.time() - stopwatch
+
+# Take a look at what was loaded
+inspect(corpora)
+
+# How to look at the data
+head(corpora[[1]]$content)
+
 # Don't want to save .RHistory and .RData anywhere else
-setwd("~/Development/DataScienceCapstone/")
+setwd("~/DataScienceCapstone/")
 
 # Helper function
 toBlank <- content_transformer(function(x, pattern) {return (gsub(pattern, "", x))})
@@ -47,13 +57,9 @@ corpora <- tm_map(corpora, toBlank, "[a-z]*shit*")
 corpora <- tm_map(corpora, stemDocument)
 
 # Now sample from the population
-percent <- 0.10
-blogs.length <- length(corpora[[1]]$content)
-news.length <- length(corpora[[2]]$content)
-twitter.length <- length(corpora[[3]]$content)
-blog.sample <- sample(corpora[[1]]$content, blogs.length * percent, replace = FALSE)
-news.sample <- sample(corpora[[2]]$content, news.length * percent, replace = FALSE)
-twitter.sample <- sample(corpora[[3]]$content, twitter.length * percent, replace = FALSE)
+blog.sample <- sample(corpora[[1]]$content, 1000, replace = FALSE)
+news.sample <- sample(corpora[[2]]$content, 1000, replace = FALSE)
+twitter.sample <- sample(corpora[[3]]$content, 1000, replace = FALSE)
 total.sample <- c(blog.sample, news.sample, twitter.sample)
 sample.corpora <- VCorpus(VectorSource(total.sample))
 
@@ -61,7 +67,4 @@ sample.corpora <- VCorpus(VectorSource(total.sample))
 tdm <- TermDocumentMatrix(sample.corpora)
 
 # Write out to see what else was missed
-writeCorpus(corpora, path = "~/Development/DataScienceCapstone/text files/")
-
-# Stop the clock
-proc.time() - ptm
+writeCorpus(sample.corpora, path = "~/DataScienceCapstone/text files/")
