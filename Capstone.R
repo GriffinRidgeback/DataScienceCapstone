@@ -4,6 +4,23 @@ setwd(dataFiles)
 
 library(tm)
 library(SnowballC)
+library(wordcloud)
+library(RColorBrewer)
+
+####################
+# Helper functions #
+####################
+#
+# Take a sample of size 'x' from a given vector
+#
+take.sample <- function(vector, sample.size) {
+  sample(vector, sample.size, replace = FALSE)
+}
+
+#
+# Convert the specified pattern to blank, given a vector
+#
+toBlank <- content_transformer(function(x, pattern) {return (gsub(pattern, "", x))})
 
 # Take some timing measurements and include in milestone report
 stopwatch <- proc.time()
@@ -23,28 +40,32 @@ head(corpora[[1]]$content)
 # Don't want to save .RHistory and .RData anywhere else
 setwd("~/DataScienceCapstone/")
 
-# Helper function
-toBlank <- content_transformer(function(x, pattern) {return (gsub(pattern, "", x))})
-
-# Cleanup document - Pass 1
+# Remove punctuation and digits
+#corpora.sample <- tm_map(corpora.sample, toBlank, "[[:punct:][:digit:]]")
 corpora <- tm_map(corpora, toBlank, "[[:punct:][:digit:]]")
 
 # Transform to lower case (need to wrap in content_transformer)
+#corpora.sample <- tm_map(corpora.sample, content_transformer(tolower))
 corpora <- tm_map(corpora, content_transformer(tolower))
 
 # Remove stopwords
+#corpora.sample <- tm_map(corpora.sample, removeWords, stopwords("english"))
 corpora <- tm_map(corpora, removeWords, stopwords("english"))
 
 # Remove whitespace
+#corpora.sample <- tm_map(corpora.sample, stripWhitespace)
 corpora <- tm_map(corpora, stripWhitespace)
 
-# But there are still leading whitespace (and maybe trailing?)
+# But there is still leading whitespace (and maybe trailing?)
+#corpora.sample <- tm_map(corpora.sample, toBlank, "^[ \t]+|[ \t]+$")
 corpora <- tm_map(corpora, toBlank, "^[ \t]+|[ \t]+$")
 
 # Remove all blank lines
+#corpora.sample <- tm_map(corpora.sample, toBlank, "^[[:blank:]*]$")
 corpora <- tm_map(corpora, toBlank, "^[[:blank:]*]$")
 
 # Now all data is in lowercase but there are some non-Latin characters to remove
+#corpora.sample <- tm_map(corpora.sample, toBlank, "[^a-z ]")
 corpora <- tm_map(corpora, toBlank, "[^a-z ]")
 
 # Now, clean out the filth
@@ -52,19 +73,101 @@ corpora <- tm_map(corpora, toBlank, "cunt")
 corpora <- tm_map(corpora, toBlank, "pussy")
 corpora <- tm_map(corpora, toBlank, "[a-z]*fuck*")
 corpora <- tm_map(corpora, toBlank, "[a-z]*shit*")
+corpora <- tm_map(corpora, toBlank, "[a-z]*bitch*")
+
+#corpora.sample <- tm_map(corpora.sample, toBlank, "cunt")
+#corpora.sample <- tm_map(corpora.sample, toBlank, "pussy")
+#corpora.sample <- tm_map(corpora.sample, toBlank, "[a-z]*fuck*")
+#corpora.sample <- tm_map(corpora.sample, toBlank, "[a-z]*shit*")
+
+# Sample from the population
+sample.size <- 5000
+total.sample <- c(take.sample(corpora[[1]]$content, sample.size),
+                  take.sample(corpora[[2]]$content, sample.size),
+                  take.sample(corpora[[3]]$content, sample.size))
+
+# Construct a VCorpus from the sampling
+corpora.sample <- VCorpus(VectorSource(total.sample))
+
+# Take some timing measurements and include in milestone report
+stopwatch <- proc.time()
+
+# Construct a DTM from the sample
+dtm <- DocumentTermMatrix(corpora.sample)
+
+# How long did the construction take?
+proc.time() - stopwatch
+
+# To see what is in the matrix (#docs = #rows, #terms = #cols)
+dtm
+
+# To see a subset
+inspect(dtm[500:600, 3740:3743])
+
+# Which terms appear more than N times?
+N <- 250
+findFreqTerms(dtm, lowfreq = N)
+
+# To find associations (i.e., terms which correlate) 
+# with at least Z correlation for a given term.
+# How does a given word relate to other terms in 
+# the corpus using a correlation limit Z.
+# A value of Z = 1 means the term ALWAYS occurs
+# with the resulting vector and decreases closer to zero.
+# Use this to find which words are most strongly
+# correlated to the most frequently-occurring words.
+# It is NOT an indicator of nearness as the DTM
+# is just a "bag of words".
+term <- "home"
+Z <- 0.2
+findAssocs(dtm, term, Z)
+
+# This function removes those terms that have a 99.999% chance of being sparse
+#non.sparse <- inspect(removeSparseTerms(dtm, 0.99999))
+non.sparse <- removeSparseTerms(dtm, 0.99999)
+non.sparse
+inspect(non.sparse)
+
+# Use a Dictionary to filter the DTM
+# BUT is useful ONLY if removeSparseTerms does something uesful
+#inspect(DocumentTermMatrix(corpora.sample, list(dictionary = c("laid", "kids", "less"))))
+
+# This also does nothing
+#removeSparseTerms(DocumentTermMatrix(corpora.sample, list(dictionary = c("laid", "kids", "less"))), 0.9999)
+
+# Calculate the frequency of each word
+freq <- colSums(as.matrix(non.sparse))
+
+# To verify counts
+sum(non.sparse[, 1]) == freq[1]
+sum(non.sparse[, 3]) == freq[3]
+
+# Create sort order (descending)
+freq.order <- order(freq, decreasing = TRUE)
+
+# List most/least frequent terms
+# Or least/most unique terms
+freq[head(freq.order)]
+freq[tail(freq.order)]
+
+# Measures of central tendency
+mean(freq)
+sd(freq)
+median(freq)
+
+# How many unique values are there?
+length(freq[freq == 1])
+
+# Plots of central tendency
+plot(1:length(freq[freq > 200]), freq[freq > 200], type = "l")
+
+# wordcloud - set same seed for consistency
+set.seed(42)
+wordcloud(names(freq), freq, min.freq = 100, colors = brewer.pal(6, "Dark2"))
 
 # Perform crude stemming
-corpora <- tm_map(corpora, stemDocument)
-
-# Now sample from the population
-blog.sample <- sample(corpora[[1]]$content, 1000, replace = FALSE)
-news.sample <- sample(corpora[[2]]$content, 1000, replace = FALSE)
-twitter.sample <- sample(corpora[[3]]$content, 1000, replace = FALSE)
-total.sample <- c(blog.sample, news.sample, twitter.sample)
-sample.corpora <- VCorpus(VectorSource(total.sample))
-
-# Now create a TermDocumentMatrix
-tdm <- TermDocumentMatrix(sample.corpora)
+# NOT SURE IF I'M GOING TO DO THIS
+#corpora <- tm_map(corpora, stemDocument)
 
 # Write out to see what else was missed
-writeCorpus(sample.corpora, path = "~/DataScienceCapstone/text files/")
+# writeCorpus(sample.corpora, path = "~/DataScienceCapstone/text files/")
