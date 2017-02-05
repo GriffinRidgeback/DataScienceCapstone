@@ -3,9 +3,9 @@ dataFiles <- "~/DataScienceCapstone/final/en_US/"
 setwd(dataFiles)
 
 library(tm)
-library(SnowballC)
 library(wordcloud)
-library(RColorBrewer)
+library(RWeka)
+library(SnowballC)
 
 ####################
 # Helper functions #
@@ -14,6 +14,7 @@ library(RColorBrewer)
 # Take a sample of size 'x' from a given vector
 #
 take.sample <- function(vector, sample.size) {
+  set.seed(42)
   sample(vector, sample.size, replace = FALSE)
 }
 
@@ -36,6 +37,8 @@ inspect(corpora)
 
 # How to look at the data
 head(corpora[[1]]$content)
+corpora[1]$content
+meta(corpora[[3]])
 
 # Don't want to save .RHistory and .RData anywhere else
 setwd("~/DataScienceCapstone/")
@@ -75,10 +78,20 @@ corpora <- tm_map(corpora, toBlank, "[a-z]*fuck*")
 corpora <- tm_map(corpora, toBlank, "[a-z]*shit*")
 corpora <- tm_map(corpora, toBlank, "[a-z]*bitch*")
 
-#corpora.sample <- tm_map(corpora.sample, toBlank, "cunt")
-#corpora.sample <- tm_map(corpora.sample, toBlank, "pussy")
-#corpora.sample <- tm_map(corpora.sample, toBlank, "[a-z]*fuck*")
-#corpora.sample <- tm_map(corpora.sample, toBlank, "[a-z]*shit*")
+# Make a backup so that we have a reference dictionary for completions
+corpora.backup <- corpora
+
+# Take some timing measurements and include in milestone report
+stopwatch <- proc.time()
+
+# Perform some crude stemming
+corpora <- tm_map(corpora, stemDocument)
+
+# "Normalize" the stemmed documents by performing stem completion
+corpora <- tm_map(corpora, stemCompletion, dictionary=corpora.backup)
+
+# How long did the construction take?
+proc.time() - stopwatch
 
 # Sample from the population
 sample.size <- 5000
@@ -118,7 +131,7 @@ findFreqTerms(dtm, lowfreq = N)
 # correlated to the most frequently-occurring words.
 # It is NOT an indicator of nearness as the DTM
 # is just a "bag of words".
-term <- "home"
+term <- "well"
 Z <- 0.2
 findAssocs(dtm, term, Z)
 
@@ -160,14 +173,8 @@ length(freq[freq == 1])
 
 # Plots of central tendency
 plot(1:length(freq[freq > 200]), freq[freq > 200], type = "l")
+# You can also look at his page to see what he did with ggplot
 
 # wordcloud - set same seed for consistency
 set.seed(42)
-wordcloud(names(freq), freq, min.freq = 100, colors = brewer.pal(6, "Dark2"))
-
-# Perform crude stemming
-# NOT SURE IF I'M GOING TO DO THIS
-#corpora <- tm_map(corpora, stemDocument)
-
-# Write out to see what else was missed
-# writeCorpus(sample.corpora, path = "~/DataScienceCapstone/text files/")
+wordcloud(names(freq), freq, min.freq = 150, colors = brewer.pal(6, "Dark2"))
