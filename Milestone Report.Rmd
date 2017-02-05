@@ -83,9 +83,9 @@ The data is largely plain-text, with various forms of punctuation and digits int
 
 ## Extract from each dataset
 A typical line, using the *en_US.news.txt* dataset, looks like this:
-```
+<pre>
 "The Alaimo Group of Mount Holly was up for a contract last fall to evaluate and suggest improvements to Trenton Water Works. But campaign finance records released this week show the two employees donated a total of $4,500 to the political action committee (PAC) Partners for Progress in early June. Partners for Progress reported it gave more than $10,000 in both direct and in-kind contributions to Mayor Tony Mack in the two weeks leading up to his victory in the mayoral runoff election June 15."
-```
+</pre>
 ## Data anomalies
 An example of an emoticon (or _emoji_) which appears in the *en_US.twitter.txt* dataset is shown below:
 ```
