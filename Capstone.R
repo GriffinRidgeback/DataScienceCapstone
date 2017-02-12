@@ -79,19 +79,19 @@ corpora <- tm_map(corpora, toBlank, "[a-z]*shit*")
 corpora <- tm_map(corpora, toBlank, "[a-z]*bitch*")
 
 # Make a backup so that we have a reference dictionary for completions
-corpora.backup <- corpora
+#corpora.backup <- corpora
 
 # Take some timing measurements and include in milestone report
-stopwatch <- proc.time()
+#stopwatch <- proc.time()
 
 # Perform some crude stemming
-corpora <- tm_map(corpora, stemDocument)
+#corpora <- tm_map(corpora, stemDocument)
 
 # "Normalize" the stemmed documents by performing stem completion
-corpora <- tm_map(corpora, stemCompletion, dictionary=corpora.backup)
+#corpora <- tm_map(corpora, stemCompletion, dictionary=corpora.backup)
 
 # How long did the construction take?
-proc.time() - stopwatch
+#proc.time() - stopwatch
 
 # Sample from the population
 sample.size <- 5000
@@ -172,7 +172,7 @@ median(freq)
 length(freq[freq == 1])
 
 # Plots of central tendency
-plot(1:length(freq[freq > 200]), freq[freq > 200], type = "l")
+plot(1:length(freq[freq > 300]), freq[freq > 300], type = "l", xlab = "Frequency", ylab = "Density")
 # You can also look at his page to see what he did with ggplot
 
 # wordcloud - set same seed for consistency
