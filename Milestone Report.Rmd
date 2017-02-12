@@ -221,6 +221,8 @@ The classic "5-number summary" shows that the data is __heavily__ skewed to the 
 ```
 _Standard Deviation_ is the best measure of spread of an approximately normal distribution. This is not the case when there are extreme values in a distribution or when the distribution is skewed, as in the situation here.  So, neither standard deviation nor variance are calculated for this data.
 
+Finally, a plot of the distribution of words that occur more than 400 in the sample is shown below:; it shows a definite skewing to the right:![Plot of highest frequency words](images/Frequency.png)
+
 # Wordcloud
 A word cloud is a visual representation of text data, typically used to visualize free form text, as well as other text-based data sources like website metadata.  Here is a wordcloud of the words in the sample having a minimum frequence of 150 occurrences.
 

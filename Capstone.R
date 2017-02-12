@@ -172,7 +172,12 @@ median(freq)
 length(freq[freq == 1])
 
 # Plots of central tendency
-plot(1:length(freq[freq > 300]), freq[freq > 300], type = "l", xlab = "Frequency", ylab = "Density")
+plot(1:length(freq[freq > 400]), 
+     freq[freq > 400], 
+     type = "l",
+     col = "blue",
+     xlab = "Frequency > 400", 
+     ylab = "Density")
 # You can also look at his page to see what he did with ggplot
 
 # wordcloud - set same seed for consistency
