@@ -183,3 +183,42 @@ plot(1:length(freq[freq > 400]),
 # wordcloud - set same seed for consistency
 set.seed(42)
 wordcloud(names(freq), freq, min.freq = 150, colors = brewer.pal(6, "Dark2"))
+
+# Function to get a comprehensive list of profanity words
+
+# Returns a vector of profanity words
+getProfanityWords <- function(corpus) {
+  profanityFileName <- "profanity.txt"
+  if (!file.exists(profanityFileName)) {
+    profanity.url <- "https://raw.githubusercontent.com/shutterstock/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/master/en"
+    download.file(profanity.url, destfile = profanityFileName, method = "curl")
+  }
+  
+  if (sum(ls() == "profanity") < 1) {
+    profanity <- read.csv(profanityFileName, header = FALSE, stringsAsFactors = FALSE)
+    profanity <- profanity$V1
+    profanity <- profanity[1:length(profanity)-1]
+  }
+  
+  profanity
+}
+
+# Function to break the corpus into sentences before creating n-grams
+makeSentences <- function(input) {
+  output <- tokenize(input, what = "sentence", removeNumbers = TRUE,
+                     removePunct = TRUE, removeSeparators = TRUE,
+                     removeTwitter = TRUE, removeHyphens = TRUE)
+  output <- removeFeatures(output, getProfanityWords())
+  unlist(lapply(output, function(a) toLower(a)))
+#  unlist(lapply(output, function(a) paste('#s#', toLower(a), '#e#')))
+}
+
+# A function for creating n-grams
+makeTokens <- function(input, n = 1L) {
+  tokenize(input, what = "word", removeNumbers = TRUE,
+           removePunct = TRUE, removeSeparators = TRUE,
+           removeTwitter = FALSE, removeHyphens = TRUE,
+           ngrams = n, simplify = TRUE)
+}
+
+sentences <- makeSentences(total.sample)
