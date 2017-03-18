@@ -5,7 +5,7 @@ setwd(dataFiles)
 library(tm)
 library(wordcloud)
 library(RWeka)
-library(SnowballC)
+library(quanteda)
 
 ####################
 # Helper functions #
@@ -24,21 +24,21 @@ take.sample <- function(vector, sample.size) {
 toBlank <- content_transformer(function(x, pattern) {return (gsub(pattern, "", x))})
 
 # Take some timing measurements and include in milestone report
-stopwatch <- proc.time()
+#stopwatch <- proc.time()
 
 # Load the whole shebang!
 corpora <- Corpus(DirSource(dataFiles))
 
 # How long did the load take?
-proc.time() - stopwatch
+#proc.time() - stopwatch
 
 # Take a look at what was loaded
-inspect(corpora)
+#inspect(corpora)
 
 # How to look at the data
-head(corpora[[1]]$content)
-corpora[1]$content
-meta(corpora[[3]])
+#head(corpora[[1]]$content)
+#corpora[1]$content
+#meta(corpora[[3]])
 
 # Don't want to save .RHistory and .RData anywhere else
 setwd("~/DataScienceCapstone/")
@@ -53,7 +53,8 @@ corpora <- tm_map(corpora, content_transformer(tolower))
 
 # Remove stopwords
 #corpora.sample <- tm_map(corpora.sample, removeWords, stopwords("english"))
-corpora <- tm_map(corpora, removeWords, stopwords("english"))
+# DON'T DO THIS!!!!
+#corpora <- tm_map(corpora, removeWords, stopwords("english"))
 
 # Remove whitespace
 #corpora.sample <- tm_map(corpora.sample, stripWhitespace)
@@ -72,11 +73,11 @@ corpora <- tm_map(corpora, toBlank, "^[[:blank:]*]$")
 corpora <- tm_map(corpora, toBlank, "[^a-z ]")
 
 # Now, clean out the filth
-corpora <- tm_map(corpora, toBlank, "cunt")
-corpora <- tm_map(corpora, toBlank, "pussy")
-corpora <- tm_map(corpora, toBlank, "[a-z]*fuck*")
-corpora <- tm_map(corpora, toBlank, "[a-z]*shit*")
-corpora <- tm_map(corpora, toBlank, "[a-z]*bitch*")
+# corpora <- tm_map(corpora, toBlank, "cunt")
+# corpora <- tm_map(corpora, toBlank, "pussy")
+# corpora <- tm_map(corpora, toBlank, "[a-z]*fuck*")
+# corpora <- tm_map(corpora, toBlank, "[a-z]*shit*")
+# corpora <- tm_map(corpora, toBlank, "[a-z]*bitch*")
 
 # Make a backup so that we have a reference dictionary for completions
 #corpora.backup <- corpora
@@ -93,8 +94,10 @@ corpora <- tm_map(corpora, toBlank, "[a-z]*bitch*")
 # How long did the construction take?
 #proc.time() - stopwatch
 
+# writeCorpus(corpora, path = "~/DataScienceCapstone/text")
+
 # Sample from the population
-sample.size <- 5000
+sample.size <- 15000
 total.sample <- c(take.sample(corpora[[1]]$content, sample.size),
                   take.sample(corpora[[2]]$content, sample.size),
                   take.sample(corpora[[3]]$content, sample.size))
@@ -102,87 +105,8 @@ total.sample <- c(take.sample(corpora[[1]]$content, sample.size),
 # Construct a VCorpus from the sampling
 corpora.sample <- VCorpus(VectorSource(total.sample))
 
-# Take some timing measurements and include in milestone report
-stopwatch <- proc.time()
-
-# Construct a DTM from the sample
-dtm <- DocumentTermMatrix(corpora.sample)
-
-# How long did the construction take?
-proc.time() - stopwatch
-
-# To see what is in the matrix (#docs = #rows, #terms = #cols)
-dtm
-
-# To see a subset
-inspect(dtm[500:600, 3740:3743])
-
-# Which terms appear more than N times?
-N <- 250
-findFreqTerms(dtm, lowfreq = N)
-
-# To find associations (i.e., terms which correlate) 
-# with at least Z correlation for a given term.
-# How does a given word relate to other terms in 
-# the corpus using a correlation limit Z.
-# A value of Z = 1 means the term ALWAYS occurs
-# with the resulting vector and decreases closer to zero.
-# Use this to find which words are most strongly
-# correlated to the most frequently-occurring words.
-# It is NOT an indicator of nearness as the DTM
-# is just a "bag of words".
-term <- "well"
-Z <- 0.2
-findAssocs(dtm, term, Z)
-
-# This function removes those terms that have a 99.999% chance of being sparse
-#non.sparse <- inspect(removeSparseTerms(dtm, 0.99999))
-non.sparse <- removeSparseTerms(dtm, 0.99999)
-non.sparse
-inspect(non.sparse)
-
-# Use a Dictionary to filter the DTM
-# BUT is useful ONLY if removeSparseTerms does something uesful
-#inspect(DocumentTermMatrix(corpora.sample, list(dictionary = c("laid", "kids", "less"))))
-
-# This also does nothing
-#removeSparseTerms(DocumentTermMatrix(corpora.sample, list(dictionary = c("laid", "kids", "less"))), 0.9999)
-
-# Calculate the frequency of each word
-freq <- colSums(as.matrix(non.sparse))
-
-# To verify counts
-sum(non.sparse[, 1]) == freq[1]
-sum(non.sparse[, 3]) == freq[3]
-
-# Create sort order (descending)
-freq.order <- order(freq, decreasing = TRUE)
-
-# List most/least frequent terms
-# Or least/most unique terms
-freq[head(freq.order)]
-freq[tail(freq.order)]
-
-# Measures of central tendency
-mean(freq)
-sd(freq)
-median(freq)
-
-# How many unique values are there?
-length(freq[freq == 1])
-
-# Plots of central tendency
-plot(1:length(freq[freq > 400]), 
-     freq[freq > 400], 
-     type = "l",
-     col = "blue",
-     xlab = "Frequency > 400", 
-     ylab = "Density")
-# You can also look at his page to see what he did with ggplot
-
-# wordcloud - set same seed for consistency
-set.seed(42)
-wordcloud(names(freq), freq, min.freq = 150, colors = brewer.pal(6, "Dark2"))
+# construct a document-feature matrix for n-gram creation
+# corpora.dfm <- dfm(corpus(corpora))
 
 # Function to get a comprehensive list of profanity words
 
@@ -190,7 +114,7 @@ wordcloud(names(freq), freq, min.freq = 150, colors = brewer.pal(6, "Dark2"))
 getProfanityWords <- function(corpus) {
   profanityFileName <- "profanity.txt"
   if (!file.exists(profanityFileName)) {
-    profanity.url <- "https://raw.githubusercontent.com/shutterstock/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/master/en"
+    profanity.url <- "https://raw.githubusercontent.ccorporaom/shutterstock/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/master/en"
     download.file(profanity.url, destfile = profanityFileName, method = "curl")
   }
   
@@ -221,4 +145,71 @@ makeTokens <- function(input, n = 1L) {
            ngrams = n, simplify = TRUE)
 }
 
-sentences <- makeSentences(total.sample)
+freq.df <- function(frame) {
+  ranking <- sort(colSums(frame), decreasing = TRUE)
+  return(data.frame(word = names(ranking), 
+                    count = ranking,
+                    row.names = NULL))
+}
+
+#sentences <- makeSentences(total.sample)
+sentences <- makeSentences(corpus(corpora.sample))
+ngram1 <- makeTokens(sentences, 1)
+ngram2 <- makeTokens(sentences, 2)
+ngram3 <- makeTokens(sentences, 3)
+ngram4 <- makeTokens(sentences, 4)
+
+dfm1 <- dfm(ngram1, tolower = FALSE)
+dfm2 <- dfm(ngram2, tolower = FALSE)
+dfm3 <- dfm(ngram3, tolower = FALSE)
+dfm4 <- dfm(ngram4, tolower = FALSE)
+
+unigram.frequency <- freq.df(dfm1)
+bigram.frequency <- freq.df(dfm2)
+trigram.frequency <- freq.df(dfm3)
+quadgram.frequency <- freq.df(dfm4)
+
+# Load the library
+library(dplyr)
+
+# Read in the data
+bi.grams <- read.csv(file = "./ngrams/bigram.txt", sep = "\t", col.names = c("count", "word1", "word2"))
+tri.grams <- read.csv(file = "./ngrams/trigram.txt", sep = "\t", col.names = c("count", "word1", "word2", "word3"))
+quad.grams <- read.csv(file = "./ngrams/quadgram.txt", sep = "\t", col.names = c("count", "word1", "word2", "word3", "word4"))
+quint.grams <- read.csv(file = "./ngrams/quintgram.txt", sep = "\t", col.names = c("count", "word1", "word2", "word3", "word4", "word5"))
+#bi.grams[which(bi.grams$count == max(bi.grams$count)), ]
+
+# Create an ngram from the data
+bi.gram.table <- bi.grams %>% mutate(ngram = paste(word1, word2, sep = "_")) %>% select(count, ngram)
+tri.gram.table <- tri.grams %>% mutate(ngram = paste(word1, word2, word3, sep = "_")) %>% select(count, ngram)
+quad.gram.table <- quad.grams %>% mutate(ngram = paste(word1, word2, word3, word4, sep = "_")) %>% select(count, ngram)
+quint.gram.table <- quint.grams %>% mutate(ngram = paste(word1, word2, word3, word4, word5, sep = "_")) %>% select(count, ngram)
+
+# Save the data
+saveRDS(bi.gram.table, file = "./data/bi.gram.table.rds")
+saveRDS(tri.gram.table, file = "./data/tri.gram.table.rds")
+saveRDS(quad.gram.table, file = "./data/quad.gram.table.rds")
+saveRDS(quint.gram.table, file = "./data/quint.gram.table.rds")
+
+# Restore the data (shiny app will need this)
+newtable <- readRDS("./data/bi.gram.table.rds")
+
+# This gives the indices of the matched data
+results <- grep("^to_have_a_baby", quint.gram.table$ngram, value = FALSE)
+paste("^", inputString, sep = "", collapse = "_")
+
+# This gives the frequency of the matched data
+counts <- quint.gram.table[results, 1]
+
+# This dataframe combines the work
+weighting <- data.frame(results, counts)
+
+# Now order the dataframe so the highest counts and indices are considered
+z <- order(weighting$counts, weighting$results, decreasing = TRUE)
+
+# Get the first index
+first_position <- weighting[z[1], ]$results
+
+quint.gram.table[first_position, ]
+quint.gram.table[first_position, ]$ngram
+
