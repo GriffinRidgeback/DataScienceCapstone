@@ -96,7 +96,7 @@ An example of Unicode text which can be found in the *en_US.news.txt* dataset is
 "\u0093I was just trying to hit it hard someplace,\u0094 said Rizzo, who hit the pitch to the opposite field in left-center. \u0093I\u0092m just up there trying to make good contact.\u0094"
 ```
 # Preprocessing steps
-Before any meaningful data mining work can be done, the corpora needs to be cleansed a bit further.  There are several standards steps perfomed in most data mining efforts; most of them are listed in the next sub-section.
+Before any meaningful data mining work can be done, the corpora needs to be cleansed a bit further.  There are several standards steps performed in most data mining efforts; most of them are listed in the next sub-section.
 
 ## Helper function
 In order to efficiently remove certain undesired patterns in the data, a **content_transformer** (i.e., a function which modifies the content of an R object) is assigned to an R variable.  This **content_transformer** is defined with a simple function to replace undesired patterns with a blank and will be passed to the **tm_map** method of the **tm** package.
@@ -224,7 +224,7 @@ _Standard Deviation_ is the best measure of spread of an approximately normal di
 Finally, a plot of the distribution of words that occur more than 400 in the sample is shown below:; it shows a definite skewing to the right:![Plot of highest frequency words](images/Frequency.png)
 
 # Wordcloud
-A word cloud is a visual representation of text data, typically used to visualize free form text, as well as other text-based data sources like website metadata.  Here is a wordcloud of the words in the sample having a minimum frequence of 150 occurrences.
+A word cloud is a visual representation of text data, typically used to visualize free form text, as well as other text-based data sources like website metadata.  Here is a wordcloud of the words in the sample having a minimum frequency of 150 occurrences.
 
 ![Wordcloud of the DTM](images/wordcloud.png)
 
