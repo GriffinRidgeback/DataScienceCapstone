@@ -1,7 +1,7 @@
 Coursera Data Science Specialization - Capstone Presentation
 ========================================================
 author: Kevin E. D'Elia
-date: 03/19/2017
+date: 03/26/2017
 autosize: true
 font-family: 'Helvetica'
 
@@ -15,13 +15,13 @@ Students in this course were asked to analyze large bodies of text (**corpora**)
 Datasets
 ========================================================
 
-<small>The datasets for the initial phase of the project are from a corpus called __HC Corpora___, available [here](https://d396qusza40orc.cloudfront.net/dsscapstone/dataset/Coursera-SwiftKey.zip); information, what little there is, about the corpus can be found at this [site](https://web.archive.org/web/20160522150305/http://www.corpora.heliohost.org/aboutcorpus.html).  The corpora consist of a set of 3 text files, one for each for several languages; only the English set was used.  Within the set are the following files:
+<small>The datasets for the initial phase of the project are from a corpus called __HC Corpora__, available [here](https://d396qusza40orc.cloudfront.net/dsscapstone/dataset/Coursera-SwiftKey.zip); information, what little there is, about the corpus can be found at this [site](https://web.archive.org/web/20160522150305/http://www.corpora.heliohost.org/aboutcorpus.html).  The corpora consist of a set of 3 text files, one for each for several languages; only the English set was used.  Within the set are the following files:
 
 * en_US.blogs.txt
 * en_US.news.txt
 * en_US.twitter.txt
 
-For the final application, pre-computed n-gram files were used.  These files were obtained from the [N-grams data](http://www.ngrams.info/intro.asp) website, a reference provided by the Wiki page on n-grams.  The free datasets contain approximately 1 million of the most frequent 2, 3, 4, and 5-grams.  Once the n-gram data was loaded, the dataframes were mutated to create a column called **ngram** which consisted of the word_n columns concatenated with an underscore; the word_n columns were then removed.</small>
+For the final application, pre-computed n-gram files were used.  These files were obtained from the [N-grams data](http://www.ngrams.info/intro.asp) website, a reference provided by the Wiki page on n-grams.  The free datasets contain approximately 1 million of the most frequent 2, 3, 4, and 5-grams.  Once the n-gram data was loaded, the dataframes were mutated to create a column called **ngram** which consisted of the *word_n* columns concatenated with an underscore; the *word_n* columns were then removed.</small>
 
 Algorithm
 ========================================================
