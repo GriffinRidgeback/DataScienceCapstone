@@ -33,6 +33,6 @@ The Shiny application, which is hosted [here](https://thedatascientist.shinyapps
 
 **Help & Examples**:  This tab briefly describes both the background behind the application and its usage.  Also included is a table which gives the test harness used to validate the functioning of the algorithm.  It consisists primarily of the phrases used and the words predicted by the algorithm.  The application will return the top predictions (three at most) to the user.
 
-**Try it!**:  The UI is a simple interface to the prediction algorithm, consisting of a simple input box for entering your phrase and a button to press to run the prediction algorithm.  Predictions (up to 3) appear below the button
+**Try it!**:  The UI is a simple interface to the prediction algorithm, consisting of a simple input box for entering your phrase and a button to press to run the prediction algorithm.  Predictions (up to 3) appear below the button.  Note that the algorithm handles most phrases quite well but seems to have some difficulty with strings such as _@@@_ or _%%%_; the application won't crash but neither will it return any predicted values or any indicator to that effect.
 
 While it won't put SwiftKey out of business (just yet, anyway), the application is fast and performs reasonably well for relatively normal, everyday input phrases.
