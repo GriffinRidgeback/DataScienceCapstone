@@ -512,7 +512,7 @@ body {
 
 
 .reveal {
-  font-family: "Lato", sans-serif;
+  font-family: 'Helvetica', sans-serif;
 }
   
 .reveal h1,
@@ -521,7 +521,7 @@ body {
 .reveal h4,
 .reveal h5,
 .reveal h6 {
-  font-family: "News Cycle", Impact, sans-serif;
+  font-family: 'Helvetica', Impact, sans-serif;
 }
 
 
@@ -749,7 +749,7 @@ hljs.initHighlightingOnLoad();
   <div class="slides">
 
 <section data-state="section" data-transition="linear" data-transition-speed="default">
-<h1>Coursera Data Science Specialization - Capstone Presentation</h1><p>Kevin E. D&#x27;Elia<br/>03&#x2F;19&#x2F;2017</p>
+<h1>Coursera Data Science Specialization - Capstone Presentation</h1><p>Kevin E. D&#x27;Elia<br/>03&#x2F;26&#x2F;2017</p>
 
 <div class="slideContent" >
 
@@ -769,7 +769,7 @@ hljs.initHighlightingOnLoad();
 <section data-transition="linear" data-transition-speed="default">
 <h3>Datasets</h3>
 <div class="slideContent" >
-<p>The datasets used in the initial phase of the project are from a corpus called <strong>HC Corpora</strong> and are available <a href="https://d396qusza40orc.cloudfront.net/dsscapstone/dataset/Coursera-SwiftKey.zip">here</a>; information, what little there is, about the corpus can be found at this <a href="https://web.archive.org/web/20160522150305/http://www.corpora.heliohost.org/aboutcorpus.html">site</a>.  The corpora consist of a set of 3 text files, one set each for <em>English</em>, <em>German</em>, <em>Russian</em>, and <em>Finnish</em>.  Only the English set was used.  Within the set are the following files:</p>
+<p><small>The datasets for the initial phase of the project are from a corpus called <strong>HC Corpora</strong>, available <a href="https://d396qusza40orc.cloudfront.net/dsscapstone/dataset/Coursera-SwiftKey.zip">here</a>; information, what little there is, about the corpus can be found at this <a href="https://web.archive.org/web/20160522150305/http://www.corpora.heliohost.org/aboutcorpus.html">site</a>.  The corpora consist of a set of 3 text files, one for each for several languages; only the English set was used.  Within the set are the following files:</p>
 
 <ul>
 <li>en_US.blogs.txt</li>
@@ -777,15 +777,15 @@ hljs.initHighlightingOnLoad();
 <li>en_US.twitter.txt</li>
 </ul>
 
-<p>For the final application, a set of pre-computed n-gram files were used.  These files were obtained from the <a href="http://www.ngrams.info/intro.asp">N-grams data</a> website, one of the references provided by the Wiki page on n-grams.  The free datasets contain approximately 1 million of the most frequent 2, 3, 4, and 5-grams.</p>
+<p>For the final application, pre-computed n-gram files were used.  These files were obtained from the <a href="http://www.ngrams.info/intro.asp">N-grams data</a> website, a reference provided by the Wiki page on n-grams.  The free datasets contain approximately 1 million of the most frequent 2, 3, 4, and 5-grams.  Once the n-gram data was loaded, the dataframes were mutated to create a column called <strong>ngram</strong> which consisted of the <em>word_n</em> columns concatenated with an underscore; the <em>word_n</em> columns were then removed.</small></p>
 
 </div>
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
 <h3>Algorithm</h3>
-<div class="mediaOnly slideContent" >
-<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfgAAAH4CAMAAACR9g9NAAAABlBMVEUAAAD///+l2Z/dAAAACXBIWXMAAAsSAAALEgHS3X78AAAJ40lEQVR4nO3d7XbiuBYAUfP+Lz2rMx06MdjIlo4+TtX+cTPrgtVABSQbB7aHkLbRN0BjGB7K8FCGhzI8lOGhDA9leCjDQxkeyvBQhocyPJThoQwPZXgow0MZHsrwUIaHMjyU4aEMD2V4KMNDGR7K8FCGhzI8lOGhDA9leCjDQxkeyvBQhocyPJThoQwPZXgow0MZHsrwUIaHMjyU4aEMD2V4KMNDGR7K8FCGhzI8lOGhDA9leCjDQxkeqib8ppkFhq/YVtEMD2V4qNrwJxOG4WdWGX7b/byyrUYyPJThoZzjoVzVQxk+pY9H5hq81B9ez/DDbI/asgW/N9vR9Qw/yvGTcX+duxc/f7V+Xq/wbQCF6RT++bS/uK2idAj/t/zbZ7fhh4mf46O2VZ34VX3QtopmeCjDQ9Wu6k923Qw/syar+pvbaiDDQznHQxkeyvBQhocyPJThoQwPZXgow0MZHsrwUIaHMjyU4aEMD2V4KMNDGR7K8FCGhzI8lOGhDA9leCjDQxkeyvBQhocyPJThoQwPZXgow0MZHsrwUIaHMjyU4aEMD1X9OXd+C9WaKsNvu59XttVIhocyPJRzPJSreijDQ/lSD+XiDsrwUAHh/YrRFTjHQ7mqhzI8lOGhDA9Vu6r3myYXVb2qr9hWAxkeyjkeyvBQhocyPJThoQwPZXgow0MZPqXPp8EYPqPtUVvW8Cvafvzv+XXuXhy2rWpsXy/1hsf5muA/zPKGT8jwUL7UQ7m4o3J3jsoDODpgeCjDQxkeyvBQhocyPJThoQwPZXgow0MZHsrwUIaH2L9fZ3iGl3foDY/wek6O4TsZ+xGvhh+l4GSo6H/e8AOUnP4YfgOc4/sbHt5V/Rjjw+8Zvo/Bc/wrw3cy2xc3GB7K8FC14f1qkkVVht92P69sq5EMD2X4c7Mtxptxjj813e53M67qz8x3wK2ZgPCJvmnS8MdX+Pq8lawv9YY/uXw7ul6Gx8s5/vjy1OFd1R9fnjt8Ws7xUO7OQRkeyvBQhu9ktt0Dw/cx3QEBw3cx3yFAw3dheCjDUznHU7mq1xQMD2V4KMNDGR7K8FCGhzI8lOGhDA9l+JT8pkmmgreEDJ9QyZvAhk/I8FCGp3KOn1nkqRmu6uc1+GQsww8y+vRLww9ieCjDUznHU91c1TfaGTD8Ylq9UBh+Lc2WBoZfi+GhDE/lHJ9Q0YLdVX06Xffsi8Lfm1gMf03fY3kF4e9+DLnhr5ku/N0bY/hrJgwfMrT25pvj//y4vpY0/FU9Py6l9KV+c3GXS2345N9ClVfhS/1h95NhDD+zysWd4Vdl+HOzfTxdMyUHcE4n8txz/ODzowK5H39m9BmRgQLC+02TK6g9Vr89Mn8LFTv842Sq+97Ny7q4g8/xx7/42cOjV/Ufwh8+K5I+YkmUHrk7+s1PvjuXl7tzUIaHMjyU4Tsp2T2Y7kSMkKFZSg4ITHjqVcTQKCWHAD3ZMiHDQxmeyjl+eYGfYNLzw1EMf9F879fdu0WGv2a+d+hv3iLDX2P46qHXZPjqoRflHF879KoCD6i7qmdyP57JI3dQhocyfAK311vO8Uu7mdAzcBY331GeV4YPYHgow1PNd1z3heFD3FumubhjcneOyQM4UIaHMjyVc/wofT/35PVfc1U/Rt+978H7+oZ/GjHHjnuMDP9k+PKLw7YdwfDlF4dtO4RzfPHFYduOMXpV35PhoQwPZXgow0MZHsrwncz2+eeG72O6s/AM38Xo43SvasP7efVF0oXfdj+vbEtieKpsc7zhH28X7GPPrinhHF/tzZN5uuf3K1f1td5M3/PN6K8Cwif6itES5PDvrzX3HW+GGf7s2T33HW+HOcdvx9ea/J63U7Sqn031S/2fewgPv6QGc/xm+AW1WNwdfe3s5RujftyPhzL8ufk+q7rVv151cdi2swjcLxu8y2f4M4FHYkYf5DH8GcMHDL0CwwcMvQTn+PZDh2r2AYOu6psPHenes2mBt1baSRn+3vw5etbty/CVW63K8JVbrSpleOf4z3KG7/ux4c12BvyAw6U0O/Wq6yuO4Wu9WRqssMYwfC3Dt9x2IYZvue1KnOMbbrsUV/XttlU0w0MZHsrwUIaHwoSf/8NJ+qKEf91HRr0X9woS/vWoGOvd91eGhzI8VNLwLwu3ojl+yQ+suyln+KKoBb8cideEKcM3e1s08Qxh+LOtDB8wdCDDf5YyfLsTIZzj2w8dqmTpXbRgd1XffOjRsjx1b8KGTzNZ32R4KMNDYcM7x9dcHLbtv0GyfhTJaJOHhz8tA80dnj4RB6oNH/stVIYPUxl+2/28sm0Bw4eZO7xzfJjJw0+4qk+yMzD3HB/p5otJlteguVf1gW4uH9KsOgLCr/FNk4avufjx/UVEYXN8GMPXXPzn8u3oepM/Os7xFRc/H4bZwt87A6fZ0AtosTu3TRc+y9MyUPUc//U/k32pcJqJOFDK3bl34ZO8QjdDCe+L/8564YvWbft/3hf/veXClz11978dht9bLTz9uEszkPDO8XuU8K7qd1YL71O3keXCt3vqsl8D1gvfCvylAxuevs43PJThobDhneNrLg7btgdX9fcvDttW0QwPZXgow0MZHqpb+Pn++pGtV/jAvWb4DvlNncIHHiejH4K7yfBQhodyjodyVQ/lfjyU4aEMD2V4KMNDGR7K8FCGhzI8lOGhZg/v4dggk4f3DZgoc4f3LdcwhocyPNTc4Z3jw8x+Ioar+iAJTr3SHeufbKlbDA9leCjneKjZV/UKUht+3W+ahKsMv+1+XtlWIwWEX+ObJul8xkM5x0NN/iaNohgeyvBQhocyPFRkeM0sLvzn34w1x15z6ItjGz7L0IaHDm146NCGhw5teOjQhocOPVN4zcvwUIaHMjyU4aEMD2V4KMNDGR4q8ijV57MB7o78PX7Q0CG3/O+QMbf6a9BLN3vBw5Pfj2DAP/Fj6Nb+3tyQPyr+MfalbYLEDR0W/sfQEaLC/xj7yvWjhL3Sx4ePueXbIy7890v9pQ0CBc7xgeF//UfboYPCX7/Zhn8z9K//aDty8K2eInzYdNZljm++bvz3I+h36trYhu80NCh83KfiRO/HRwz9vZMdcavvjO2ROyjDQxkeyvBQhocyPJThoQwPZXgow0MZHsrwUIaHMjyU4aEMD2V4KMNDGR7K8FCGP5L8kUl+9yokf2SS371T/5+S/Pj158vPH9kfmeR378z/f1+6bT//inX79f9nlvzunfn1x2xvf2SW/O6d2n783fLfP0b5/vFI/8gkv3sf/H6OP2L/wm0uye/eGed4Klf1ZNQHgHq/n6gPAPV+P1EfAOr9xjM8lOGhDA9leCjDQxkeyvBQhocyPJThoQwPZXgow0MZHsrwUP8BIWfUpzrcTNwAAAAASUVORK5CYII=" alt="plot of chunk unnamed-chunk-1"/></p>
+<div class="slideContent" >
+<p><small>  The data input via the UI is then &ldquo;sanitized&rdquo;: underscores are replaced by blanks, punctuation and digits are removed, and the entire string converted to lower case.  <strong>Note:</strong> no profane words are scrubbed and stopwords are kept.  The string is then tokenized, blank string possibly resulting from sanitization are removed, the length of the string is calculated, and then the string is formatted with underscores to match the reference data.  Based on the length of the input string, several code blocks are executed, each doing similar work on slightly modified data.  First, the appropriate n-gram table is searched (e.g., the quintgram table is searched for an input quadgram).  If the search returns results (i.e., indices of data which matched the input), those indices are ordered according to frequency.  At most three are selected (the top three) and the data associated with those indices is extracted, the trailing word removed, and that is what is returned to the UI.  If there is no match, the input string is &ldquo;pruned&rdquo; (i.e., the first word is removed) and the resulting string is put through the process again.  If no data matches the input string, a message to that effect is returned.</small> </p>
 
 </div>
 
@@ -793,6 +793,13 @@ hljs.initHighlightingOnLoad();
 <section data-transition="linear" data-transition-speed="default">
 <h3>Shiny Application</h3>
 <div class="slideContent" >
+<p><small>The Shiny application, hosted <a href="https://thedatascientist.shinyapps.io/DataCapstone/">here</a>, consists of two tab panels:</p>
+
+<p><strong>Help &amp; Examples</strong>:  This tab briefly describes both the background behind the application and its usage.  Also included is a table which gives the test harness used to validate the functioning of the algorithm.  It consists primarily of the phrases used and the words predicted by the algorithm.  The application will process 1 to 4 word phrases (phrases longer than that can be entered but will be shortened to conform to the 4-gram limit) and return the top predictions (three at most) that complete the phrase.</p>
+
+<p><strong>Try it!</strong>:  The simple UI to the prediction algorithm consists of an input box for entering a phrase and a button to press to run the prediction algorithm.  Predictions appear below the button.  <strong>Note</strong>: Some inputs, such as <em>@@@</em>, are troublesome, i.e., no predicted values are returned.</p>
+
+<p>While it won&#39;t put SwiftKey out of business (just yet, anyway), the application is fast and performs reasonably well for relatively normal, everyday input phrases.</small></p>
 
 </div>
 
