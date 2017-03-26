@@ -1,0 +1,31 @@
+---
+title: ""
+author: ""
+date: ""
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Welcome to the Next Word Prediction Application
+
+This application has been produced to satisfy the requirements of the **Capstone Project**, which is the last course in the **Data Science Specialization** offered by **Coursera**.  It attempts to guess (_predict_) the word with the highest probability of completing a given sequence of words.  The algorithm by which it does this is simple; the application, even simpler.
+
+Click the **Try it!** tab when you are ready.  The UI consists of a simple input box for entering your phrase and a button to press to run the prediction algorithm.  Predictions (up to 3) appear below the button.
+
+To get a feel for how the application works, and to verify its accuracy, the following table shows a number of phrases that were used to test the application.  The _phrase type_ is given in the first column, the _test phrase_ in the second (note that some of the phrases are longer only to make them a bit more realistic), the _predicted word(s)_ are in the third column, and the fourth and final column lists the _prediction source_, which is the table used to make the prediction.  For instance, the bigram **"was infamous"** had no predictive value in the trigram table, which would be the first source in which to look, so the phrase was "pruned", the bigram table was searched, and it was ultimately found there. 
+
+Have fun!
+
+```{r examples, echo=FALSE}
+column.names <- c("Phrase Type", "Phrase", "Prediction", "Prediction Source")
+dataset.data <- data.frame(
+  c("unigram", "bigram", "", "trigram", "", "", "quadgram", "", "", ""),
+  c("visited", "about having", "was infamous", "a desire to", "be intensely aware", "I think they overstayed", "a blow to the", "The bus jerks to a", "We saw the army and", "for residents and visitors"),
+  c("the/a/by", "a/to/the", "for", "be/help/have", "of", "their", "head/back", "stop", "the/police/navy", "to/can/are"),
+  c("bigram", "trigram", "bigram", "quadgram", "trigram", "bigram", "quintgram", "quadgram", "trigram", "bigram")
+  )
+library(knitr)
+kable(dataset.data, caption = "Working Examples", col.names = column.names)
+```
